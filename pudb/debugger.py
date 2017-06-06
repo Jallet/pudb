@@ -896,6 +896,12 @@ class DebuggerUI(FrameVarInfoKeeper):
                 fvi.watches.append(we)
                 self.update_var_view()
 
+        def move_down(w, size, key):
+            w.keypress(size, "down")
+
+        def move_up(w, size, key):
+            w.keypress(size, "up")
+
         self.var_list.listen("\\", change_var_state)
         self.var_list.listen("t", change_var_state)
         self.var_list.listen("r", change_var_state)
@@ -909,6 +915,8 @@ class DebuggerUI(FrameVarInfoKeeper):
         self.var_list.listen("enter", edit_inspector_detail)
         self.var_list.listen("n", insert_watch)
         self.var_list.listen("insert", insert_watch)
+        self.var_list.listen("j", move_down)
+        self.var_list.listen("k", move_up)
 
         self.var_list.listen("[", partial(change_rhs_box, 'variables', 0, -1))
         self.var_list.listen("]", partial(change_rhs_box, 'variables', 0, 1))
@@ -937,6 +945,8 @@ class DebuggerUI(FrameVarInfoKeeper):
 
         self.stack_list.listen("[", partial(change_rhs_box, 'stack', 1, -1))
         self.stack_list.listen("]", partial(change_rhs_box, 'stack', 1, 1))
+        self.stack_list.listen("j", move_down)
+        self.stack_list.listen("k", move_up)
 
         # }}}
 
@@ -1056,6 +1066,8 @@ class DebuggerUI(FrameVarInfoKeeper):
         self.bp_list.listen("d", delete_breakpoint)
         self.bp_list.listen("s", save_breakpoints)
         self.bp_list.listen("e", enable_disable_breakpoint)
+        self.bp_list.listen("j", move_down)
+        self.bp_list.listen("k", move_up)
 
         self.bp_list.listen("[", partial(change_rhs_box, 'breakpoints', 2, -1))
         self.bp_list.listen("]", partial(change_rhs_box, 'breakpoints', 2, 1))
@@ -1156,11 +1168,6 @@ class DebuggerUI(FrameVarInfoKeeper):
                 lineno = min(max(0, int(lineno_edit.value())-1), len(self.source)-1)
                 self.source.set_focus(lineno)
 
-        def move_down(w, size, key):
-            w.keypress(size, "down")
-
-        def move_up(w, size, key):
-            w.keypress(size, "up")
 
         def page_down(w, size, key):
             w.keypress(size, "page down")
